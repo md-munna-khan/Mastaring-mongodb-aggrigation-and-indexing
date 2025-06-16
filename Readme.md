@@ -131,3 +131,51 @@ db.test.aggregate([
     }}
 ])
 ```
+
+## 16-4 explore more about $group & $project
+- name change in project show time
+```sql
+db.test.aggregate([
+    {$group: { _id: null,
+        totalSalary:{$sum:"$salary"},
+        maxSalary:{$max:"$salary"},
+        minSalary:{$min:"$salary"},
+        avgSalary:{$avg: "$salary"},
+    }},
+    // stage-2
+    {
+        $project: {
+          totalSalary:1,
+           maxSalary:1,
+           
+           averageSalary:"$avgSalary"
+        }
+    }
+    ])
+
+    ```
+
+    ![alt text](image-11.png)
+![alt text](image-12.png)
+
+- calculation in project 
+sql
+db.test.aggregate([
+    {$group: { _id: null,
+        totalSalary:{$sum:"$salary"},
+        maxSalary:{$max:"$salary"},
+        minSalary:{$min:"$salary"},
+        avgSalary:{$avg: "$salary"},
+    }},
+    // stage-2
+    {
+        $project: {
+          totalSalary:1,
+           maxSalary:1,
+           averageSalary:"$avgSalary",
+           rangeBetweenMaxAndMin:{$subtract: ["$maxSalary","$minSalary"]}
+        }
+    }
+    ])
+    ```
+
