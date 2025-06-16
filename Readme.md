@@ -76,3 +76,106 @@ db.test.aggregate([
    
 ])
 ```
+## 16-2 $addFields , $out , $merge aggregation stage
+- original data not modified
+![alt text](image-4.png)
+
+```sql
+db.test.aggregate([
+  // stage-1
+  { $match: { gender: "Male", age: { $gt: 30 } } },
+  // Stage-2
+  {
+    $addFields: {
+      course: "Level-2",
+      eduTech: "Programming Hero",
+      monerMoto: "Moner Iccha",
+    },
+  },
+  // stage-3
+  //   { $project: { course: 1, eduTech: 1 } },
+
+  // stage-4
+
+  { $out: "Course-Students"},
+]);
+```
+![alt text](image-5.png)
+- if you want create extra collection in specific collection and  $out and if you want create existing data in main data use $merge
+
+
+## 16-3 $group , $sum , $push aggregation stage
+![alt text](image-6.png)
+![alt text](image-7.png)
+![alt text](image-8.png)
+
+- show all data 
+```sql
+db.test.aggregate([
+    { $group: { _id: "$address.country", count: { $sum: 1 } ,showName:{$push: "$$ROOT" }}}
+    
+])
+```
+![alt text](image-9.png)
+![alt text](image-10.png)
+```sql
+db.test.aggregate([
+    // stage-1
+    { $group: { _id: "$address.country", count: { $sum: 1 } ,fullDoc:{$push: "$$ROOT" }}},
+    // stage-2
+    
+    {$project: {
+        "fullDoc.name":1,
+        "fullDoc.email":1,
+        "fullDoc.phone":1,
+    }}
+])
+```
+
+## 16-4 explore more about $group & $project
+- name change in project show time
+```sql
+db.test.aggregate([
+    {$group: { _id: null,
+        totalSalary:{$sum:"$salary"},
+        maxSalary:{$max:"$salary"},
+        minSalary:{$min:"$salary"},
+        avgSalary:{$avg: "$salary"},
+    }},
+    // stage-2
+    {
+        $project: {
+          totalSalary:1,
+           maxSalary:1,
+           
+           averageSalary:"$avgSalary"
+        }
+    }
+    ])
+
+    ```
+
+    ![alt text](image-11.png)
+![alt text](image-12.png)
+
+- calculation in project 
+sql
+db.test.aggregate([
+    {$group: { _id: null,
+        totalSalary:{$sum:"$salary"},
+        maxSalary:{$max:"$salary"},
+        minSalary:{$min:"$salary"},
+        avgSalary:{$avg: "$salary"},
+    }},
+    // stage-2
+    {
+        $project: {
+          totalSalary:1,
+           maxSalary:1,
+           averageSalary:"$avgSalary",
+           rangeBetweenMaxAndMin:{$subtract: ["$maxSalary","$minSalary"]}
+        }
+    }
+    ])
+    ```
+
