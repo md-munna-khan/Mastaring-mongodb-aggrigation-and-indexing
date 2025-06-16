@@ -286,4 +286,18 @@ db.test.aggregate([
     ])
  ```
  
+ ## 16-8 $lookup stage, embedding vs referencing
+ ![alt text](image-18.png)
+
+ ```js
+ db.orders.aggregate([
+    {
+        $lookup: {
+               from: "test",
+               localField: "userId",
+               foreignField: "_id",
+               as: "user"
+             }
+    }])
+ ```
     
