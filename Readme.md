@@ -153,10 +153,9 @@ db.test.aggregate([
     }
     ])
 
-    ```
+    
 
-    ![alt text](image-11.png)
-![alt text](image-12.png)
+
 
 - calculation in project 
 sql
@@ -177,5 +176,30 @@ db.test.aggregate([
         }
     }
     ])
-    ```
+ ``` 
+    ![alt text](image-11.png)
+![alt text](image-12.png)
+## 16-5 Explore $group with $unwind aggregation stage
+```js
+db.test.aggregate([
+  { $unwind: "$friends" },
+  {
+    $group: { _id: "$friends", count: { $sum: 1 } }
+  }
+])
 
+// find per age interests
+db.test.aggregate([
+    //stage-1
+    {
+        $unwind: "$interests"
+    },
+    {
+        $group: { _id: "$age",interestPerAge:{$push:"$interests"
+        }}
+    }
+    ])
+    
+```
+![alt text](image-13.png)
+![alt text](image-14.png)
