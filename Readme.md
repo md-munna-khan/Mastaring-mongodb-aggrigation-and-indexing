@@ -76,3 +76,29 @@ db.test.aggregate([
    
 ])
 ```
+## 16-2 $addFields , $out , $merge aggregation stage
+- original data not modified
+![alt text](image-4.png)
+
+```sql
+db.test.aggregate([
+  // stage-1
+  { $match: { gender: "Male", age: { $gt: 30 } } },
+  // Stage-2
+  {
+    $addFields: {
+      course: "Level-2",
+      eduTech: "Programming Hero",
+      monerMoto: "Moner Iccha",
+    },
+  },
+  // stage-3
+  //   { $project: { course: 1, eduTech: 1 } },
+
+  // stage-4
+
+  { $out: "Course-Students"},
+]);
+```
+![alt text](image-5.png)
+- if you want create extra collection in specific collection and  $out and if you want create existing data in main data use $merge
