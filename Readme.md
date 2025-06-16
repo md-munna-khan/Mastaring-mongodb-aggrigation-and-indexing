@@ -203,3 +203,52 @@ db.test.aggregate([
 ```
 ![alt text](image-13.png)
 ![alt text](image-14.png)
+
+## 16-6 $bucket, $sort, and $limit aggregation stage
+
+```js
+db.test.aggregate([
+    {
+        $bucket: {
+              groupBy: "$age",
+              boundaries: [ 20,40, 80 ],
+              default: "80 er upore",
+              output: {
+                "count": { $sum: 1 },
+                kakaAse:{$push: "$name"
+              }
+            }
+    }}
+    
+    ])
+ ```
+![alt text](image-15.png)
+```js
+db.test.aggregate([
+    // stage-1
+    {
+        $bucket: {
+              groupBy: "$age",
+              boundaries: [ 20,40, 80 ],
+              default: "80 er upore",
+              output: {
+                count: { $sum: 1 },
+                kakaAse:{$push: "$$ROOT"
+              }
+            }
+    }},
+    // stage-2
+    {
+        $sort: {count:-1}
+    },
+    //satge-3
+    {
+        $limit: 2
+    },
+    //stage-4
+    {
+        $project: {count:1}
+    }
+    ])
+ ```
+![alt text](image-16.png)
