@@ -300,4 +300,9 @@ db.test.aggregate([
              }
     }])
  ```
-    
+  ## 16-9 What is indexing, COLLSCAN vs IXSCAN
+  ![alt text](image-19.png)
+  ![alt text](image-20.png)
+- collScan
+  ![alt text](image-21.png)
+  ![alt text](image-22.png)
