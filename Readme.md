@@ -56,3 +56,8 @@ What Will You Learn From This Module?
 
 
 Embark on this journey to master MongoDB Aggregation and enhance your data manipulation and analysis skills within the MongoDB environment! Happy learning!
+
+## 16-0 Intro the powerful aggregation framework
+
+![alt text](image.png)
+![alt text](image-1.png)
