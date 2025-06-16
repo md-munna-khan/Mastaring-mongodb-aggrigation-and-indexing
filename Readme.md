@@ -61,3 +61,18 @@ Embark on this journey to master MongoDB Aggregation and enhance your data manip
 
 ![alt text](image.png)
 ![alt text](image-1.png)
+
+## 16-1 $match , $project aggregation stage
+- aggrigation stage-1
+![alt text](image-2.png)
+![alt text](image-3.png)
+```sql
+db.test.aggregate([
+ 
+    // stage-1
+    {$match: {gender:"Male",age:{$lt:30}}},
+    // stage-2
+       {$project: {name:1,age:1,gender:1}},
+   
+])
+```
