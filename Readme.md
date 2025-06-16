@@ -153,10 +153,9 @@ db.test.aggregate([
     }
     ])
 
-    ```
+    
 
-    ![alt text](image-11.png)
-![alt text](image-12.png)
+
 
 - calculation in project 
 sql
@@ -177,5 +176,133 @@ db.test.aggregate([
         }
     }
     ])
-    ```
+ ``` 
+    ![alt text](image-11.png)
+![alt text](image-12.png)
+## 16-5 Explore $group with $unwind aggregation stage
+```js
+db.test.aggregate([
+  { $unwind: "$friends" },
+  {
+    $group: { _id: "$friends", count: { $sum: 1 } }
+  }
+])
 
+// find per age interests
+db.test.aggregate([
+    //stage-1
+    {
+        $unwind: "$interests"
+    },
+    {
+        $group: { _id: "$age",interestPerAge:{$push:"$interests"
+        }}
+    }
+    ])
+    
+```
+![alt text](image-13.png)
+![alt text](image-14.png)
+
+## 16-6 $bucket, $sort, and $limit aggregation stage
+
+```js
+db.test.aggregate([
+    {
+        $bucket: {
+              groupBy: "$age",
+              boundaries: [ 20,40, 80 ],
+              default: "80 er upore",
+              output: {
+                "count": { $sum: 1 },
+                kakaAse:{$push: "$name"
+              }
+            }
+    }}
+    
+    ])
+ ```
+![alt text](image-15.png)
+```js
+db.test.aggregate([
+    // stage-1
+    {
+        $bucket: {
+              groupBy: "$age",
+              boundaries: [ 20,40, 80 ],
+              default: "80 er upore",
+              output: {
+                count: { $sum: 1 },
+                kakaAse:{$push: "$$ROOT"
+              }
+            }
+    }},
+    // stage-2
+    {
+        $sort: {count:-1}
+    },
+    //satge-3
+    {
+        $limit: 2
+    },
+    //stage-4
+    {
+        $project: {count:1}
+    }
+    ])
+ ```
+![alt text](image-16.png)
+
+## 16-7 $facet, multiple pipeline aggregation stage
+![alt text](image-17.png)
+```js
+db.test.aggregate([
+    
+    {
+        $facet: {
+            //pipeline-1
+            "friendsCount":[
+                // stage-1
+                {$unwind: "$friends"},
+                // stage-2
+                {$group: { _id: "$friends",count:{$sum: 1}}}
+                ],
+                //pipeline-2
+               "educationCount":[
+                 //stage-1
+                 {$unwind: "$education"},
+                 //stage-2
+                 {$group: { _id: "$education",count:{$sum:1}}}
+                   
+                   ] ,
+                   //pipeline-3
+                   "skillsCount":[
+                       {$unwind: "$skills"},
+                       {$group: { _id: "$skills",count:{$sum:1}}}
+                       
+                       ]
+        }
+    }
+    ])
+ ```
+ 
+ ## 16-8 $lookup stage, embedding vs referencing
+ ![alt text](image-18.png)
+
+ ```js
+ db.orders.aggregate([
+    {
+        $lookup: {
+               from: "test",
+               localField: "userId",
+               foreignField: "_id",
+               as: "user"
+             }
+    }])
+ ```
+  ## 16-9 What is indexing, COLLSCAN vs IXSCAN
+  ![alt text](image-19.png)
+  ![alt text](image-20.png)
+- collScan
+  ![alt text](image-21.png)
+  ![alt text](image-22.png)
