@@ -102,3 +102,32 @@ db.test.aggregate([
 ```
 ![alt text](image-5.png)
 - if you want create extra collection in specific collection and  $out and if you want create existing data in main data use $merge
+
+
+## 16-3 $group , $sum , $push aggregation stage
+![alt text](image-6.png)
+![alt text](image-7.png)
+![alt text](image-8.png)
+
+- show all data 
+```sql
+db.test.aggregate([
+    { $group: { _id: "$address.country", count: { $sum: 1 } ,showName:{$push: "$$ROOT" }}}
+    
+])
+```
+![alt text](image-9.png)
+![alt text](image-10.png)
+```sql
+db.test.aggregate([
+    // stage-1
+    { $group: { _id: "$address.country", count: { $sum: 1 } ,fullDoc:{$push: "$$ROOT" }}},
+    // stage-2
+    
+    {$project: {
+        "fullDoc.name":1,
+        "fullDoc.email":1,
+        "fullDoc.phone":1,
+    }}
+])
+```
